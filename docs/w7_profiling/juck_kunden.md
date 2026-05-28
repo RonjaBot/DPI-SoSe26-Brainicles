@@ -10,6 +10,7 @@
 ## Spalten
 
 | Spalte | Typ-Vermutung | Beispiel | Distinct | Null% | Bemerkung |
+|---|---|---|---|---|---|
 | kunden_nr | Integer | 1 | 223 | 0% | eindeutige Kunden-ID |
 | anrede | String | Herr | 2 | 0% | nur Herr/Frau |
 | vorname | String | Thomas | 63 | 0% | normale Textwerte |
