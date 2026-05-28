@@ -3,7 +3,7 @@
 ## Datei
 - Format: CSV
 - Trennzeichen: ;
-- Encoding: vermutlich UTF-8, keine sichtbaren Zeichenfehler
+- Encoding: UTF-8
 - Header: ja
 - Zeilen: 150
 - Spalten: 6
