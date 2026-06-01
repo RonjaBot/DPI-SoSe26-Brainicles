@@ -24,7 +24,7 @@ Die Quelldaten stammen aus verschiedenen Praxissystemen und liegen in unterschie
 
 * Alexandra Witzsche-Grafen
 * Ronja Charlot Bothe
-* Trieu-Vy Dao
+* Trieu-Vi Dao
 
 ---
 
