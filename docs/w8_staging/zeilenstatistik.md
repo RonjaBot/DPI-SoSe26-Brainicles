@@ -2,8 +2,8 @@
 
 | Tabelle | Datensätze |
 |----------|-----------:|
-| staging.juck_kunden |  |
-| staging.juck_behandlungen |  |
+| staging.juck_kunden | 223 |
+| staging.juck_behandlungen | 150 |
 | staging.wald_kunden | 227 |
 | staging.wald_behandlungen | 150 |
 | staging.schm_kunden |  |
