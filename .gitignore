@@ -216,9 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+<<<<<<< HEAD
 
 #DS_Store
 .DS_Store
 
 #fallstudie_datenmanagement_master
+=======
+>>>>>>> 860ec96 (Ignore source data repository)
+fallstudie_datenmanagement_master/
 fallstudie_datenmanagement_master/
