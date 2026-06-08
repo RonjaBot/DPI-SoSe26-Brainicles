@@ -8,5 +8,5 @@
 | staging.wald_behandlungen | 150 |
 | staging.schm_kunden |  |
 | staging.schm_behandlungen |  |
-| staging.berg_patienten |  |
-| staging.berg_behandlungen |  |
+| staging.berg_patienten | 232 |
+| staging.berg_behandlungen | 150 |
