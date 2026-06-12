@@ -39,4 +39,5 @@ SELECT
     leistung,
     betrag
 
-FROM staging.schm_behandlungen_unflat;
+FROM staging.schm_behandlungen_unflat
+         ;
