@@ -14,6 +14,7 @@ CREATE TABLE staging.schm_kunden AS
 -- Schmidt Behandlungen
 
 DROP TABLE IF EXISTS staging.schm_behandlungen_unflat;
+
 CREATE TABLE staging.schm_behandlungen_unflat AS
 
          SELECT *
@@ -24,6 +25,7 @@ CREATE TABLE staging.schm_behandlungen_unflat AS
          );
 
 DROP TABLE IF EXISTS staging.schm_behandlungen;
+
 CREATE TABLE staging.schm_behandlungen AS 
 
 SELECT
