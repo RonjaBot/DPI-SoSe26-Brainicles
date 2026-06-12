@@ -1,4 +1,5 @@
 -- Schmidt Kunden
+DROP TABLE IF EXISTS staging.schm_kunden;
 
 CREATE TABLE staging.schm_kunden AS
          SELECT *
