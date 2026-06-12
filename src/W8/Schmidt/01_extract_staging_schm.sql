@@ -19,11 +19,8 @@ CREATE TABLE staging.schm_behandlungen_unflat AS
          SELECT *
 
          FROM read_json_auto(
-
              'fallstudie_datenmanagement_master/verbund/praxis_schmidt_behandlungen.json',
-
              format='auto'
-
          );
 
 DROP TABLE IF EXISTS staging.schm_behandlungen;
