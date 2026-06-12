@@ -32,17 +32,11 @@ CREATE TABLE staging.schm_behandlungen AS
 SELECT
 
     id,
-
     datum,
-
     kunde,
-
     tier.name AS tier_name,
-
     tier.art AS tier_art,
-
     leistung,
-
     betrag
 
 FROM staging.schm_behandlungen_unflat;
