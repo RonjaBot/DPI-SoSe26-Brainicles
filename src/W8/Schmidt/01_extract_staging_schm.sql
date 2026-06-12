@@ -20,7 +20,7 @@ CREATE TABLE staging.schm_behandlungen_unflat AS
 
          FROM read_json_auto(
 
-             'C:/Users/vidao/fallstudie_datenmanagement_master/verbund/praxis_schmidt_behandlungen.json',
+             'fallstudie_datenmanagement_master/verbund/praxis_schmidt_behandlungen.json',
 
              format='auto'
 
