@@ -40,3 +40,5 @@ SELECT
 
 FROM staging.schm_behandlungen_unflat
          ;
+
+DROP TABLE IF EXISTS staging.schm_behandlungen_unflat;
