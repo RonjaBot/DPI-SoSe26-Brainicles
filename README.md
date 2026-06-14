@@ -20,7 +20,7 @@ Die Quelldaten stammen aus verschiedenen Praxissystemen und liegen in unterschie
 
 ---
 
-# Team
+## Team
 
 * Alexandra Witzsche-Grafen
 * Ronja Charlot Bothe
@@ -28,27 +28,53 @@ Die Quelldaten stammen aus verschiedenen Praxissystemen und liegen in unterschie
 
 ---
 
-# Projektstruktur
+## Projektstruktur
 
 ```text
 docs/
-└── w7_profiling/
-    ├── juck_kunden.md
-    ├── juck_behandlungen.md
-    ├── wald_kunden.md
-    ├── wald_behandlungen.md
-    ├── schm_kunden.md
-    ├── schm_behandlungen.md
-    ├── berg_patienten.md
-    ├── berg_behandlungen.md
-    ├── data_dictionary.md
-    └── fehlerliste.md
+├── w7_profiling/
+│   ├── juck_kunden.md
+│   ├── juck_behandlungen.md
+│   ├── wald_kunden.md
+│   ├── wald_behandlungen.md
+│   ├── schm_kunden.md
+│   ├── schm_behandlungen.md
+│   ├── berg_patienten.md
+│   ├── berg_behandlungen.md
+│   ├── data_dictionary.md
+│   └── fehlerliste.md
+│
+└── w8_staging/
+    └── zeilenstatistik.md
 
 src/
-    -> Python- und SQL-Skripte
+├── W7/
+│   └── profile_juck.py
+│
+└── W8/
+    ├── Bergblick/
+    │   ├── 00_create_schemas_berg.sql
+    │   ├── 01_extract_staging_berg.py
+    │   └── 02_row_statistics_berg.sql
+    │
+    ├── Juckstadt/
+    │   ├── 00_create_schemas_juck.sql
+    │   ├── 01_extract_staging_juck.sql
+    │   └── 02_row_statistics_juck.sql
+    │
+    ├── Schmidt/
+    │   ├── 00_create_schemas_schm.sql
+    │   ├── 01_extract_staging_schm.sql
+    │   └── 02_row_statistics_schm.sql
+    │
+    └── Waldrand/
+        ├── 00_create_schemas_wald.sql
+        ├── 01_extract_staging_wald.sql
+        └── 02_row_statistics_wald.sql
 
 data/
-    -> lokale Datenablage
+└── duckDB/
+    └── dpi.duckdb
 
 requirements.txt
 README.md
@@ -56,22 +82,22 @@ README.md
 
 ---
 
-# Setup
+## Setup
 
-## Repository klonen
+### Repository klonen
 
 ```bash
 git clone <repo-url>
 ```
 
-## Virtuelle Umgebung erstellen
+### Virtuelle Umgebung erstellen
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-## Dependencies installieren
+### Dependencies installieren
 
 ```bash
 pip install -r requirements.txt
@@ -79,9 +105,9 @@ pip install -r requirements.txt
 
 ---
 
-# DuckDB starten
+## DuckDB starten
 
-## DuckDB Web UI
+### DuckDB Web UI
 
 ```bash
 duckdb -ui
@@ -93,19 +119,34 @@ Die DuckDB-Oberfläche öffnet sich anschließend im Browser unter:
 http://localhost:4213
 ```
 
+### Bestehende DuckDB-Datenbank öffnen
+
+```bash
+duckdb data/duckDB/dpi.duckdb
+```
+
+### Staging-Tabellen prüfen
+
+```sql
+SELECT table_schema, table_name
+FROM information_schema.tables
+WHERE table_schema = 'staging'
+ORDER BY table_name;
+```
+
 ---
 
-# Datenquellen
+## Datenquellen
 
 Die Quelldaten bestehen aus mehreren heterogenen Datenquellen verschiedener Tierarztpraxen.
 
-## Enthaltene Formate
+### Enthaltene Formate
 
 * CSV-Dateien mit unterschiedlichen Trennzeichen (`;`, `,`, `|`)
 * JSON-Dateien mit verschachtelter Struktur
 * XML-Dateien mit Namespace und Nested Elements
 
-## Wichtige Unterschiede zwischen den Quellen
+### Wichtige Unterschiede zwischen den Quellen
 
 * unterschiedliche Datumsformate
 * unterschiedliche Telefonnummernformate
@@ -116,7 +157,7 @@ Die Quelldaten bestehen aus mehreren heterogenen Datenquellen verschiedener Tier
 
 ---
 
-# Pipeline-Architektur
+## Pipeline-Architektur
 
 ```mermaid
 flowchart LR
@@ -128,13 +169,13 @@ F --> M[Matching / Golden Record]
 
 ---
 
-# Schichtenmodell
+## Schichtenmodell
 
-## staging
+### staging
 
 Rohdaten aus den Quellen ohne fachliche Transformation.
 
-## transform
+### transform
 
 Normalisierte und harmonisierte Daten:
 
@@ -143,15 +184,15 @@ Normalisierte und harmonisierte Daten:
 * Tierarten
 * Beträge
 
-## final
+### final
 
 Konsolidiertes Zielmodell mit Dublettenerkennung und Golden Records.
 
 ---
 
-# Aktueller Stand
+## Aktueller Stand
 
-## W07 – Profiling
+### W07 – Profiling
 
 Abgeschlossen:
 
@@ -170,9 +211,29 @@ Identifizierte Hauptprobleme:
 * fehlende eindeutige Referenzen
 * unterschiedliche Sprach- und Formatkonventionen
 
+### W08 – Extract und Staging
+
+Abgeschlossen:
+
+* Extract-Skripte für Juckstadt, Waldrand, Schmidt und Bergblick
+* Anlage der DuckDB-Schemata `staging`, `transform` und `final`
+* Befüllung der Staging-Tabellen
+* Dokumentation der Zeilenstatistik
+
+Angelegte Staging-Tabellen:
+
+* `staging.juck_kunden`
+* `staging.juck_behandlungen`
+* `staging.wald_kunden`
+* `staging.wald_behandlungen`
+* `staging.schm_kunden`
+* `staging.schm_behandlungen`
+* `staging.berg_patienten`
+* `staging.berg_behandlungen`
+
 ---
 
-# Verwendete Technologien
+## Verwendete Technologien
 
 * Python
 * DuckDB
@@ -180,5 +241,3 @@ Identifizierte Hauptprobleme:
 * Git/GitHub
 * Markdown
 * SQL
-
-
