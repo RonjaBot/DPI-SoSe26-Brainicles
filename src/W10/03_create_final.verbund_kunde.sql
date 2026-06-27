@@ -15,14 +15,9 @@ SELECT
     string_agg(k.quelle || ':' || k.quell_id, ', ') AS quellen_datensaetze,
     count(*) AS anzahl_quell_datensaetze
 
-FROM transform.norm_kunde_with_gold k
+FROM transform.norm_kunde k
 JOIN final.kunde_mapping m
     ON k.quelle = m.quelle
    AND k.quell_id = m.quell_id
 
 GROUP BY m.final_kunde_id;
-
---
-
-SELECT COUNT(*) AS anzahl_finale_kunden
-FROM final.verbund_kunde;
