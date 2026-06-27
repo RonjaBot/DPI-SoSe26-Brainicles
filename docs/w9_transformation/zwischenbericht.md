@@ -113,18 +113,49 @@ Diese Variante liefert eine deutlich höhere Precision. Das bedeutet, dass fast 
 
 ---
 
-## 6. Bewertung der Ergebnisse
+##6 Optimierte Matching-Variante
 
-Die beiden Varianten zeigen den typischen Precision-Recall-Trade-off im Matching:
+Auf Basis der Fehleranalyse wurde die zweite Matching-Variante anschließend weiter verbessert. Dabei zeigte sich, dass mehrere tatsächliche Dubletten nicht erkannt wurden, obwohl sie dieselbe normalisierte Telefonnummer sowie sehr ähnliche Nachnamen und Straßenangaben aufwiesen. Diese Fälle erreichten im ursprünglichen Scoring nur 50 Punkte und lagen damit unter dem gewählten Schwellwert.
 
-* Die erste Variante ist großzügiger und erkennt fast alle echten Dubletten, erzeugt aber mehr False Positives.
-* Die zweite Variante ist strenger und erzeugt kaum falsche Treffer, übersieht dafür aber mehr echte Dubletten.
+Deshalb wurde eine zusätzliche regelbasierte Entscheidungsregel ergänzt:
 
-Für die weitere Bearbeitung wird die zweite Variante bevorzugt, da sie durch die Einbindung von String-Ähnlichkeit fachlich besser zum deterministischen Szenario A passt und eine höhere Gesamtgüte nach F1-Score erreicht.
+Wenn die normalisierte Telefonnummer übereinstimmt und sowohl der Nachname als auch die Straße eine hohe Levenshtein-Ähnlichkeit aufweisen, wird das Kandidatenpaar ebenfalls als Match klassifiziert.
+
+### Zusätzliche Regel
+
+* Senkung des Schwellwerts von **60 auf 55 Punkten**
+* gleiche normalisierte Telefonnummer
+* Nachnamen-Ähnlichkeit mindestens **0,85**
+* Straßen-Ähnlichkeit mindestens **0,80**
+
+### Ergebnis der optimierten Variante
+
+| Kennzahl        | Wert   |
+| --------------- | ------ |
+| Kandidatenpaare | 1.789  |
+| True Positives  | 125    |
+| False Positives | 1      |
+| False Negatives | 11     |
+| Precision       | 0,9921 |
+| Recall          | 0,9191 |
+| F1-Score        | 0,9542 |
+
+Durch diese Erweiterung konnten deutlich mehr echte Dubletten erkannt werden. Die Anzahl der True Positives stieg von 96 auf 125, während die False Positives unverändert bei 1 blieben. Dadurch verbesserte sich insbesondere der Recall von 0,7059 auf 0,9191. Gleichzeitig stieg der F1-Score deutlich von 0,8240 auf 0,9542. Die optimierte Variante stellt damit die beste bisher getestete Matching-Variante dar.
+
+## 7. Bewertung der Ergebnisse
+
+Die drei getesteten Varianten verdeutlichen, wie sich unterschiedliche Matching-Regeln auf die Erkennungsqualität auswirken.
+
+* Die **erste Variante** erkennt einen Großteil der tatsächlichen Dubletten, erzeugt jedoch vergleichsweise viele False Positives.
+* Die **zweite Variante** nutzt zusätzlich String-Ähnlichkeiten für Nachname und Straße. Dadurch werden Fehlmatches deutlich reduziert und die Precision erhöht, allerdings werden einige echte Dubletten nicht mehr erkannt.
+* Die **optimierte dritte Variante** kombiniert den regelbasierten Score mit einer zusätzlichen Entscheidungsregel für Datensätze mit identischer Telefonnummer sowie hoher Nachnamen- und Straßenähnlichkeit. Zusätzlich wurde der Schwellwert von 60 auf 55 Punkte angepasst. Dadurch konnten deutlich mehr echte Dubletten erkannt werden, ohne die Anzahl der False Positives zu erhöhen.
+
+Für die weitere Bearbeitung wird die **optimierte dritte Variante** verwendet. Sie erzielt mit einer Precision von **0,9921**, einem Recall von **0,9191** und einem **F1-Score von 0,9542** die beste Gesamtleistung aller getesteten Matching-Varianten und eignet sich daher am besten als Grundlage für die Erstellung der Gold-Schicht.
+
 
 ---
 
-## 7. Nächste Schritte
+## 8. Nächste Schritte
 
 Als nächster Schritt sollen die erkannten Dubletten zu einer Gold-Schicht zusammengeführt werden. Dafür wird auf Basis der Matching-Ergebnisse eine finale Kundentabelle aufgebaut:
 
