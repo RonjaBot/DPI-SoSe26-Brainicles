@@ -63,14 +63,20 @@ src/
 │   ├── Schmidt/
 │   └── Waldrand/
 │
-└── W9/
-    ├── 03_union_norm_kunde.sql
-    ├── 04_union_norm_behandlung.sql
-    ├── 05_load_gold_cluster.sql
-    ├── 06_norm_kunde_with_gold.sql
-    ├── 07_match_candidates.sql
-    ├── 08_matching_score.sql
-    └── 08_matching_score_similarity.sql
+├── W9/
+│   ├── 03_union_norm_kunde.sql
+│   ├── 04_union_norm_behandlung.sql
+│   ├── 05_load_gold_cluster.sql
+│   ├── 06_norm_kunde_with_gold.sql
+│   ├── 07_match_candidates.sql
+│   ├── 08_matching_score.sql
+│   └── 08_matching_score_similarity.sql
+│
+└── W10/
+    ├── 01_create_table_final_matches.sql
+    ├── 02_create_final.kunde_mapping.sql
+    ├── 03_create_final.verbund_kunde.sql
+    └── 04_create_final.verbund_behandlung.sql
 
 data/
 └── duckDB/
@@ -148,11 +154,11 @@ Die Fallstudie umfasst vier Tierarztpraxen mit unterschiedlichen Datenformaten u
 
 ```mermaid
 flowchart LR
-Q[Quelldaten] --> B[Staging]
-B --> T[Transformation]
+Q[Quelldaten] --> S[Staging]
+S --> T[Transformation]
 T --> M[Matching]
-M --> E[Evaluation]
-E --> G[Golden Records]
+M --> F[Final]
+F --> V[Verbund-Datenbank]
 ```
 
 ---
@@ -242,17 +248,32 @@ Für jedes Kandidatenpaar werden folgende Merkmale berücksichtigt:
 
 ### Final (Gold)
 
-Die Gold-Schicht wird in den folgenden Meilensteinen aufgebaut.
+Die Final-Schicht bildet das Zielmodell der ETL-Pipeline. Auf Grundlage der Matching-Ergebnisse werden Dubletten konsolidiert und für jede reale Person ein eindeutiger Golden Record erzeugt. Anschließend werden sämtliche Behandlungsdaten den konsolidierten Kunden zugeordnet.
 
-Geplante Tabelle:
+### Umgesetzte Schritte
 
+* Übernahme aller bestätigten Matches
+* Bildung zusammengehöriger Dublettengruppen
+* Vergabe neuer Verbund-Kunden-IDs
+* Erstellung konsolidierter Golden Records
+* Zuordnung aller Behandlungen zu den Golden Records
+
+### Erzeugte Tabellen
+
+* `final.matches`
+* `final.kunde_mapping`
 * `final.verbund_kunde`
+* `final.verbund_behandlung`
 
-Ziel:
+### Ergebnis
 
-* eine Zeile pro realer Person
-* Zusammenführung von Dubletten
-* Grundlage für Reporting und Analysen
+| Tabelle | Datensätze |
+|----------|-----------:|
+| final.matches | 97 |
+| final.verbund_kunde | 799 |
+| final.verbund_behandlung | 600 |
+
+Die Golden Records enthalten zusätzlich Informationen über die zusammengeführten Quelldatensätze und bilden die Grundlage für verbundweite Auswertungen.
 
 ---
 
@@ -302,6 +323,44 @@ Abgeschlossen:
 
 Die Ergebnisse zeigen eine sehr hohe Precision bei gleichzeitig guter Gesamtgüte (F1-Score).
 
+### W10 – Vollständige Pipeline
+
+Abgeschlossen:
+
+* Aufbau der Final-Schicht
+* Übernahme bestätigter Matching-Ergebnisse
+* Erstellung eines Kunden-Mappings für alle Quelldatensätze
+* Bildung konsolidierter Golden Records
+* Zusammenführung redundanter Kundendatensätze
+* Referenzierung aller Behandlungen auf die Golden Records
+* Aufbau der finalen Verbund-Datenbank
+* Fertigstellung der vollständigen ETL-Pipeline
+
+### Endergebnis der Datenintegration
+
+| Kennzahl | Wert |
+|----------|------:|
+| Ursprüngliche Kundendatensätze | 916 |
+| Golden Records | 799 |
+| Behandlungen | 600 |
+
+Durch die Dublettenerkennung konnten redundante Kundendatensätze erfolgreich zu 799 eindeutigen Verbund-Kunden konsolidiert werden. Alle Behandlungen wurden anschließend den entsprechenden Golden Records zugeordnet und in das finale Zielmodell übernommen.
+
+---
+## Ausführungsreihenfolge
+
+Die vollständige ETL-Pipeline wird in folgender Reihenfolge ausgeführt:
+
+1. Extraktion der Quelldaten (W8)
+2. Befüllung der Staging-Tabellen
+3. Harmonisierung der Kunden- und Behandlungsdaten
+4. Erstellung der Matching-Kandidaten
+5. Berechnung der Matching-Scores
+6. Erzeugung der bestätigten Matches
+7. Aufbau der Final-Schicht
+8. Erstellung des Kunden-Mappings
+9. Erzeugung der Golden Records
+10. Überführung der Behandlungen in das finale Zielmodell
 ---
 
 ## Verwendete Technologien
