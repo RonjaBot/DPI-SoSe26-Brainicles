@@ -50,8 +50,12 @@ docs/
 ├── w8_staging/
 │   └── zeilenstatistik.md
 │
-└── w9_transformation/
-    └── zwischenbericht.md
+├── w9_transformation/
+│   └── zwischenbericht.md
+│
+└── w10_final/
+    └── bericht_w10.md
+
 
 src/
 ├── W7/
@@ -242,7 +246,7 @@ Für jedes Kandidatenpaar werden folgende Merkmale berücksichtigt:
 #### Matching-Tabellen
 
 * `transform.match_candidates`
-* `transform.match_scored_similarity`
+* `transform.match_scored_similarity_v2`
 
 ---
 
